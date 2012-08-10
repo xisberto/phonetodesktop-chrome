@@ -1,0 +1,113 @@
+body {
+    width: 350px;
+    padding: 0px 0px 8px;
+}
+
+.navbar {
+	margin: 0px 0px 5px;
+}
+
+.navbar .brand {
+	padding-bottom: 0px;
+}
+
+.navbar-item img {
+	height: 20px;
+	vertical-alignment: top;
+}
+
+.icon-mono {
+	background: url(images/icon-mono.png);
+}
+
+.btn {
+	background-image: none;
+}
+
+#main_screen .tab-content {
+	height: 400px;
+	padding: 0px 3px 0px;
+}
+
+#tab_wait {
+	text-align: center;
+	padding-top: 20px;
+}
+
+#tab_about p.center {
+	text-align: center;
+}
+
+#task_list {
+	list-style-type: none;
+	margin-left: 0 ! important;
+}
+
+#task_list .linear_layout {
+	border-bottom: thin solid #e4e4e4;
+	padding: 8px 3px;
+}
+
+.min_height {
+	min-height: 36px;
+}
+
+.linear_layout div {
+	display: inline-block;
+}
+
+.linear_layout .task_text {
+	width: 80%;
+}
+
+.linear_layout .btn_del, .linear_layout .btn {
+	float: right;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+.task_text.done {
+	text-decoration:line-through;
+}
+
+form span {
+	display: block;
+	border-bottom: thin solid #e4e4e4;
+	padding: 16px 3px;
+}
+
+form label {
+	display: inline;
+	text-align: left;
+}
+
+form input {
+	display: inline;
+	float: right;
+}
+
+form .bottom_line {
+	background: url(images/botom_line.png);
+	position: fixed;
+	width: 100%;
+	bottom: 0px;
+	padding: 8px;
+}
+
+input[type="checkbox"] {
+	display: none;
+}
+
+.checkbox {
+	background: url(images/btn_check_off_holo_light.png) no-repeat ;
+	background-position: right;
+}
+
+.checkbox.checked {
+	background: url(images/btn_check_on_holo_light.png) no-repeat ;
+	background-position: right;
+}
+
+.checkbox label {
+	margin-left: -16px;
+}

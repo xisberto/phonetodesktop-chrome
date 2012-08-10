@@ -1,0 +1,56 @@
+<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="popup.css" rel="stylesheet">
+</head>
+<body>
+    <section class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="https://play.google.com/store/apps/details?id=net.xisberto.phonetodesktop" target="_blank"><img src="images/icon.png" /> PhoneToDesktop</a>
+                <ul id="actionbar_tab" class="nav pull-right">    
+                    <li class="navbar-item">
+                        <a href="#" id="btn_refresh"><img src="images/refresh.png"></a>
+                    </li>                
+                    <li class="navbar-item dropdown">
+                        <a id="overflow" href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="images/overflow.png"></a>
+                        <ul class="dropdown-menu">
+                            <li class="hide"><a href="#tab_wait"><span></span></a></li>
+                            <li><a href="#tab_list"><i class="icon-list"></i><span> View list</span></a></li>
+                            <li><a href="#tab_about"><i class="icon-mono"></i><span> About</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="main_screen" class="container-fluid">
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_wait">
+                <img src="images/spinner.gif" />
+            </div>
+            <div class="tab-pane" id="tab_list">
+                <div class="container-fluid" id="task_list">
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_about">
+                <p class="center"><img src="images/icon128.png"></p>
+                <div id="about_message"></div>
+            </div>
+        </div>
+    </section>
+    
+    
+<!-- Placed at the end of the document so the pages load faster -->
+    <script src="bootstrap/js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
+    <script src="bootstrap/js/jquery.linkify-1.0.js"></script>
+    <script src="popup.js"></script>
+
+</body>
+</html>
