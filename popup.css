@@ -58,6 +58,7 @@ body {
 
 .linear_layout .task_text {
 	width: 80%;
+	word-break: break-all;
 }
 
 .linear_layout .btn_del, .linear_layout .btn {
