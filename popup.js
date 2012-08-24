@@ -104,7 +104,7 @@ function listTasks(tasks) {
         btn_del.appendTo(item);
         
         item.appendTo($("#task_list"));
-        $("#"+tasks[j].id).linkify(function(links){
+        $("#task_list").linkify(function(links){
             links.attr("target", "_blank");
         });
     }
