@@ -61,10 +61,14 @@ body {
 	word-break: break-all;
 }
 
-.linear_layout .btn_del, .linear_layout .btn {
-	float: right;
+.linear_layout .btns {
+    float: right;
 	margin-right: 5px;
 	cursor: pointer;
+}
+
+.linear_layout .btn {
+    display: block;
 }
 
 .task_text.done {
