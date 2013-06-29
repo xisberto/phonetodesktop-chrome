@@ -1,6 +1,6 @@
 {
   "name": "Phone To Desktop",
-  "version": "0.9.8",
+  "version": "1.0",
   "manifest_version": 2,
   "default_locale": "en",
   "description": "__MSG_extDesc__",
@@ -13,7 +13,7 @@
   	"128": "images/icon128.png"
   },
   "browser_action": {
-    "default_icon": "images/icon.png",
+    "default_icon": "images/icon16.png",
     "default_title": "Phone To Desktop",
     "default_popup": "popup.html"
   },
