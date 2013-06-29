@@ -49,7 +49,7 @@ body {
 }
 
 .min_height {
-	min-height: 36px;
+	min-height: 56px;
 }
 
 .linear_layout div {
@@ -58,13 +58,17 @@ body {
 
 .linear_layout .task_text {
 	width: 80%;
-	word-break: break-all;
+	word-break: break-word;
 }
 
-.linear_layout .btn_del, .linear_layout .btn {
-	float: right;
+.linear_layout .btns {
+    float: right;
 	margin-right: 5px;
 	cursor: pointer;
+}
+
+.linear_layout .btn {
+    display: block;
 }
 
 .task_text.done {

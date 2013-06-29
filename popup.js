@@ -49,7 +49,7 @@ function loadTasks() {
 }
 
 function delete_item(event){
-    var parent = $(this).parent();
+    var parent = $(this).parent().parent();
     var list_id = localStorage.getItem('list_id');
     var task_id = parent.attr("id");
     var url = "https://www.googleapis.com/tasks/v1/lists/"+list_id+"/tasks/"+task_id;
@@ -92,6 +92,9 @@ function listTasks(tasks) {
         var item = $("<div class='linear_layout min_height'>");
         item.attr("id", tasks[j].id);
         
+        var div_btns = $("<div class='btns'>");
+        div_btns.appendTo(item);
+        
         var div_text = $("<div class='task_text'>")
         div_text.text(tasks[j].title).appendTo(item);
         if (tasks[j].status == "completed") {
@@ -101,7 +104,7 @@ function listTasks(tasks) {
         var btn_del = $("<a class='btn'>");
         btn_del.append("<i class='icon-trash'></i>");
         btn_del.click(delete_item);
-        btn_del.appendTo(item);
+        btn_del.appendTo(div_btns);
         
         item.appendTo($("#task_list"));
         $("#task_list").linkify(function(links){
