@@ -95,7 +95,7 @@ function listTasks(tasks) {
         var div_btns = $("<div class='btns'>");
         div_btns.appendTo(item);
         
-        var div_text = $("<div class='task_text'>")
+        var div_text = $("<div class='task_text'>");
         div_text.text(tasks[j].title).appendTo(item);
         if (tasks[j].status == "completed") {
             div_text.addClass("done");
