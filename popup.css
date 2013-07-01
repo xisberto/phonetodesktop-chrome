@@ -1,6 +1,6 @@
 body {
-    width: 350px;
-    padding: 0px 0px 8px;
+    width: 320px;
+    padding: 0px;
 }
 
 .navbar {
@@ -18,6 +18,11 @@ body {
 
 .icon-mono {
 	background: url(images/icon-mono.png);
+}
+
+.dropdown-menu > li > a:hover > .icon-mono,
+.dropdown-menu > .active > a > .icon-mono {
+	background: url(images/icon-mono-revert.png);
 }
 
 .btn {
