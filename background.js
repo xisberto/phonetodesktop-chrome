@@ -8,8 +8,8 @@ var oauth = ChromeExOAuth.initBackgroundPage({
 	'app_name': 'PhoneToDesktop',
 	'callback_page': 'chrome_ex_oauth.html'
 });
-
 var displayed = JSON.parse(localStorage.getItem('list_displayed') || '{}'),
+	linksReg = /((http|https|ftp)\:\/\/|\bw{3}\.)[a-z0-9\-\.]+\.[a-z]{2,3}(:[a-z0-9]*)?\/?([a-z\u00C0-\u017F0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~])*/gi,
 	get = function() {
 		var list_id = localStorage.getItem('list_id');
 		if (!navigator.onLine || !list_id) return;
@@ -19,12 +19,16 @@ var displayed = JSON.parse(localStorage.getItem('list_displayed') || '{}'),
 			function(resp) {
 				resp = JSON.parse(resp);
 				var j,
-					tasks = resp.items;
+					i,
+					tasks = resp.items,
+					urls;
 				for(j in tasks) {
-					if(tasks[j].title === "" || displayed[tasks[j].id]) {
-						continue;
+					if(tasks[j].title !== "" && !displayed[tasks[j].id]) {
+						urls = tasks[j].title.match(linksReg) || [];
+						for(i = 0; i < urls.length; i++) {
+							chrome.tabs.create({'url': urls[i]});
+						}
 					}
-					chrome.tabs.create({'url': tasks[j].title.split(' ')[0]});
 					displayed[tasks[j].id] = true;
 				}
 				localStorage.setItem('list_displayed', JSON.stringify(displayed));
