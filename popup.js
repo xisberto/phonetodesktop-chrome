@@ -22,6 +22,16 @@ function saveListId() {
     oauth.sendSignedRequest(url, oauth_callback, request);
 }
 
+function reset_configuration() {
+    localStorage.removeItem('list_id');
+    oauth.clearTokens();
+    var background_page = chrome.extension.getBackgroundPage();
+    chrome.runtime.reload();
+    console.log("reset_configuration");
+    console.log("list_id: "+localStorage.getItem("list_id"));
+    loadTasks();
+}
+
 function handle_list_id_updated(e) {
     if (e.key == 'list_id') {
         loadTasks();
@@ -29,6 +39,7 @@ function handle_list_id_updated(e) {
 }
 
 function loadTasks() {
+    $("#actionbar_tab a[href='#tab_wait']").tab('show');
     var list_id = localStorage.getItem('list_id');
     if (list_id == null){
         chrome.extension.getBackgroundPage().addEventListener("storage", handle_list_id_updated, false);
@@ -41,8 +52,12 @@ function loadTasks() {
             'method': 'GET'
         };
         var callback = function(resp, xhr) {
-            resp = JSON.parse(resp);
-            listTasks(resp.items);
+            if (xhr.status == 200) {
+                resp = JSON.parse(resp);
+                listTasks(resp.items);
+            } else {
+                alertNoList();
+            }
         }
         oauth.sendSignedRequest(url, callback, request);
     }
@@ -73,12 +88,22 @@ function delete_item(event){
 
 function alertNoList() {
     $("#task_list").empty();
-    var linear_layout = $("<div class='linear_layout min_height'>");
-    linear_layout.append($("<div>"));
-    linear_layout.children("div").text(chrome.i18n.getMessage("needAuthorizeApp"));
-    linear_layout.children("div").linkify({
+    linear_layout = $("<div class='linear_layout min_height'>");
+    message_authorize = $("<p>");
+    message_authorize.text(chrome.i18n.getMessage("needAuthorizeApp"));
+    message_authorize.linkify({
         target: "_blank"
     });
+    
+    message_reset = $("<p>");
+    message_reset.text(chrome.i18n.getMessage("needResetConf"));
+    button_reset = $("<a class='btn'>");
+    button_reset.text(chrome.i18n.getMessage("reset_configuration"));
+    button_reset.click(reset_configuration);
+    message_reset.append(button_reset);
+    
+    linear_layout.append(message_authorize);
+    linear_layout.append(message_reset);
     linear_layout.appendTo($("#task_list"));
     $("#actionbar_tab a[href='#tab_list']").tab('show');
 }
@@ -114,6 +139,7 @@ function listTasks(tasks) {
 function prepareHTMLTexts(){
     $("a[href='#tab_list'] span").text(chrome.i18n.getMessage("tab_list"));
     $("a[href='#tab_about'] span").text(chrome.i18n.getMessage("tab_about"));
+    $("#btn_reset").text(chrome.i18n.getMessage("reset_configuration"));
     $("<p>")
         .text(chrome.i18n.getMessage("about_message1"))
         .linkify({
@@ -134,10 +160,10 @@ $(document).ready(function(){
         $(this).tab('show');
     });
     $("#btn_refresh").click(function(e){
-        $("#actionbar_tab a[href='#tab_wait']").tab('show');
-        window.setTimeout(function(){
-            loadTasks();
-        }, 300);
+        loadTasks();
+    });
+    $("#btn_reset").click(function(e){
+        reset_configuration();
     });
     prepareHTMLTexts();
     loadTasks();

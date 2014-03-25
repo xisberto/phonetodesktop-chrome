@@ -72,10 +72,6 @@ body {
 	cursor: pointer;
 }
 
-.linear_layout .btn {
-    display: block;
-}
-
 .task_text.done {
 	text-decoration:line-through;
 }

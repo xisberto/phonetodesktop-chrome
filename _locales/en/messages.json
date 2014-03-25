@@ -1,24 +1,29 @@
 {
   "extDesc": {
-  	"message": "Phone To Desktop Chrome Extension",
-  	"description": "Extension's description"
+    "message": "Phone To Desktop Chrome Extension",
+    "description": "Extension's description"
   },
   "needAuthorizeApp": {
-  	"message": "You must authorize the Android app first: https://play.google.com/store/apps/details?id=net.xisberto.phonetodesktop",
-  	"description": "Message informing the user must authorize the Android app"
+    "message": "You must authorize the Android app first: https://play.google.com/store/apps/details?id=net.xisberto.phonetodesktop",
+    "description": "Message informing the user must authorize the Android app"
+  },
+  "needResetConf": {
+    "message": "Or you can ",
+    "description": "Message informing the user can reset the configuration"
   },
   "tab_list": {
-  	"message": " View list",
-  	"description": ""
+    "message": " View list"
   },
   "tab_about": {
-  	"message": " About",
-  	"description": ""
+    "message": " About"
   },
   "about_message1": {
-  	"message": "Phone To Desktop is a free (as in freedom) Android App. The source code is in https://github.com/xisberto/phonetodesktop."
+    "message": "Phone To Desktop is a free (as in freedom) Android App. The source code is in https://github.com/xisberto/phonetodesktop."
   },
   "about_message2": {
-  	"message": "This extension is a complement to Phone To Desktop and its source code can be downloaded in https://github.com/xisberto/phonetodesktop-chrome."
+    "message": "This extension is a complement to Phone To Desktop and its source code can be downloaded in https://github.com/xisberto/phonetodesktop-chrome."
+  },
+  "reset_configuration": {
+    "message": "Reset the configuration"
   }
 }
