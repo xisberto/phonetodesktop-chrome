@@ -1,24 +1,29 @@
 {
   "extDesc": {
-  	"message": "Phone To Desktop Extensão para o Chrome",
-  	"description": "Descrição da extensão"
+    "message": "Phone To Desktop Extensão para o Chrome",
+    "description": "Descrição da extensão"
   },
   "needAuthorizeApp": {
-  	"message": "Você deve primeiro autorizar o aplicativo para android: https://play.google.com/store/apps/details?id=net.xisberto.phonetodesktop",
-  	"description": "Message informing the user must authorize the Android app"
+    "message": "Você deve primeiro autorizar o aplicativo para android: https://play.google.com/store/apps/details?id=net.xisberto.phonetodesktop",
+    "description": "Message informing the user must authorize the Android app"
+  },
+  "needResetConf": {
+    "message": "Ou você pode ",
+    "description": "Message informing the user can reset the configuration"
   },
   "tab_list": {
-  	"message": " Ver lista",
-  	"description": ""
+    "message": " Ver lista"
   },
   "tab_about": {
-  	"message": " Sobre",
-  	"description": ""
+    "message": " Sobre"
   },
   "about_message1": {
-  	"message": "Phone To Desktop é um aplicativo livre para Android. O código fonte pode ser encontrado em https://github.com/xisberto/phonetodesktop."
+    "message": "Phone To Desktop é um aplicativo livre para Android. O código fonte pode ser encontrado em https://github.com/xisberto/phonetodesktop."
   },
   "about_message2": {
-  	"message": "Esta extensão é um complemento ao Phone To Desktop, e seu código fonte pode ser baixado em https://github.com/xisberto/phonetodesktop-chrome."
+    "message": "Esta extensão é um complemento ao Phone To Desktop, e seu código fonte pode ser baixado em https://github.com/xisberto/phonetodesktop-chrome."
+  },
+  "reset_configuration": {
+    "message": "Reiniciar a configuração"
   }
 }
