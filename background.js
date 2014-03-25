@@ -4,6 +4,11 @@ function createContextMenu() {
         contexts: ["link", "selection"],
         onclick: contextMenuClick
     });
+    chrome.contextMenus.create({
+        title: chrome.i18n.getMessage("send_page_to_mobile"),
+        contexts: ["page"],
+        onclick: contextMenuClick
+    });
 }
 
 function contextMenuClick(onClickData, tab) {
@@ -16,6 +21,13 @@ function contextMenuClick(onClickData, tab) {
     } else if (onClickData.selectionText != undefined) {
         console.log("enviando texto selecionado");
         task_title = onClickData.selectionText;
+    } else if (onClickData.pageUrl != undefined) {
+        console.log("enviando url");
+        task_title = onClickData.pageUrl;
+    }
+    
+    if (task_title == undefined) {
+        return;
     }
     
     var list_id = localStorage.getItem("list_id");
@@ -28,9 +40,7 @@ function contextMenuClick(onClickData, tab) {
         'body': '{"title": "'+task_title+'"}'
     };
     var callback = function(resp, xhr) {
-        chrome.browserAction.setBadgeText({
-            "text": ""
-        });
+        chrome.browserAction.setBadgeText({"text": ""});
         if (xhr.status == 200) {
             console.log("OK");
             console.log(resp);
@@ -39,9 +49,7 @@ function contextMenuClick(onClickData, tab) {
             console.log(resp);
         }
     }
-    chrome.browserAction.setBadgeText({
-        "text": "…"
-    });
+    chrome.browserAction.setBadgeText({"text": "…"});
     oauth.sendSignedRequest(url, callback, request);
 }
 
@@ -57,4 +65,5 @@ var oauth = ChromeExOAuth.initBackgroundPage({
 });
 
 oauth.authorize(function(){ });
+chrome.browserAction.setBadgeBackgroundColor({"color": "#669900"});
 createContextMenu();
