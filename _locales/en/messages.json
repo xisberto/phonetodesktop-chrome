@@ -25,5 +25,11 @@
   },
   "reset_configuration": {
     "message": "Reset the configuration"
+  },
+  "send_to_mobile": {
+    "message": "Send to PhoneToDesktop"
+  },
+  "send_page_to_mobile": {
+    "message": "Send page to PhoneToDesktop"
   }
 }

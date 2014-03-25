@@ -1,6 +1,6 @@
 {
   "extDesc": {
-    "message": "Phone To Desktop Extensão para o Chrome",
+    "message": "Extensão do Phone To Desktop para o Chrome",
     "description": "Descrição da extensão"
   },
   "needAuthorizeApp": {
@@ -25,5 +25,11 @@
   },
   "reset_configuration": {
     "message": "Reiniciar a configuração"
+  },
+  "send_to_mobile": {
+    "message": "Enviar para PhoneToDesktop"
+  },
+  "send_page_to_mobile": {
+    "message": "Enviar página para PhoneToDesktop"
   }
 }
