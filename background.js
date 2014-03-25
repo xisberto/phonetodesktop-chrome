@@ -10,10 +10,10 @@ function contextMenuClick(onClickData, tab) {
     console.log(onClickData);
     console.log(tab.url);
     var task_title;
-    if (onClickData.linkUrl != null) {
+    if (onClickData.linkUrl != undefined) {
         console.log("enviando link");
         task_title = onClickData.linkUrl;
-    } else if (onClickData.selectionText != null) {
+    } else if (onClickData.selectionText != undefined) {
         console.log("enviando texto selecionado");
         task_title = onClickData.selectionText;
     }
@@ -28,6 +28,9 @@ function contextMenuClick(onClickData, tab) {
         'body': '{"title": "'+task_title+'"}'
     };
     var callback = function(resp, xhr) {
+        chrome.browserAction.setBadgeText({
+            "text": ""
+        });
         if (xhr.status == 200) {
             console.log("OK");
             console.log(resp);
@@ -36,6 +39,9 @@ function contextMenuClick(onClickData, tab) {
             console.log(resp);
         }
     }
+    chrome.browserAction.setBadgeText({
+        "text": "…"
+    });
     oauth.sendSignedRequest(url, callback, request);
 }
 
