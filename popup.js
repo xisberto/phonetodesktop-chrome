@@ -76,8 +76,8 @@ function alertNoList() {
     var linear_layout = $("<div class='linear_layout min_height'>");
     linear_layout.append($("<div>"));
     linear_layout.children("div").text(chrome.i18n.getMessage("needAuthorizeApp"));
-    linear_layout.children("div").linkify(function(links){
-        links.attr("target", "_blank");
+    linear_layout.children("div").linkify({
+        target: "_blank"
     });
     linear_layout.appendTo($("#task_list"));
     $("#actionbar_tab a[href='#tab_list']").tab('show');
@@ -97,9 +97,9 @@ function listTasks(tasks) {
         
         var div_text = $("<div class='task_text'>")
         div_text.text(tasks[j].title).appendTo(item);
-        if (tasks[j].status == "completed") {
-            div_text.addClass("done");
-        }
+        div_text.linkify({
+            target: "_blank"
+        });
         
         var btn_del = $("<a class='btn'>");
         btn_del.append("<i class='icon-trash'></i>");
@@ -107,9 +107,6 @@ function listTasks(tasks) {
         btn_del.appendTo(div_btns);
         
         item.appendTo($("#task_list"));
-        $("#task_list").linkify(function(links){
-            links.attr("target", "_blank");
-        });
     }
     $("#actionbar_tab a[href='#tab_list']").tab('show');
 }
@@ -119,14 +116,14 @@ function prepareHTMLTexts(){
     $("a[href='#tab_about'] span").text(chrome.i18n.getMessage("tab_about"));
     $("<p>")
         .text(chrome.i18n.getMessage("about_message1"))
-        .linkify(function(links){
-            links.attr("target", "_blank");
+        .linkify({
+            target: "_blank"
         })
         .appendTo($("#about_message"));
     $("<p>")
         .text(chrome.i18n.getMessage("about_message2"))
-        .linkify(function(links){
-            links.attr("target", "_blank");
+        .linkify({
+            target: "_blank"
         })
         .appendTo($("#about_message"));
 }
