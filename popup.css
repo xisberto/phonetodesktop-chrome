@@ -1,19 +1,47 @@
+/* -- import Roboto Font ---------------------------- */
+@import "https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic&subset=latin,cyrillic";
+
+/**/
+
 body {
+    font-family: "Roboto";
     width: 320px;
-    padding: 0px;
+    height: 640px;
+    padding: 50px 0px;
+}
+
+a {
+    color: #669900;
+}
+
+a:hover {
+    color: #336600;
 }
 
 .navbar {
-	margin: 0px 0px 5px;
+	margin: 0px 0px 0px;
+    border: none;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.navbar .container-fluid {
+    padding-left: 0px;
 }
 
 .navbar .brand {
 	padding-bottom: 0px;
+    color: #FFFFFF;
+    text-shadow: none;
 }
 
-.navbar-item img {
-	height: 20px;
-	vertical-alignment: top;
+.nav > li > a > img {
+	height: 24px;
+	vertical-align: middle;
+}
+
+.dropdown-menu {
+    height: 640px;
+    width: 280px;
 }
 
 .icon-mono {
@@ -23,15 +51,6 @@ body {
 .dropdown-menu > li > a:hover > .icon-mono,
 .dropdown-menu > .active > a > .icon-mono {
 	background: url(images/icon-mono-revert.png);
-}
-
-.btn {
-	background-image: none;
-}
-
-#main_screen .tab-content {
-	height: 400px;
-	padding: 0px 3px 0px;
 }
 
 #tab_wait {
@@ -45,12 +64,24 @@ body {
 
 #task_list {
 	list-style-type: none;
-	margin-left: 0 ! important;
+    padding: 0px;
 }
 
 #task_list .linear_layout {
 	border-bottom: thin solid #e4e4e4;
-	padding: 8px 3px;
+	padding: 8px 0px;
+}
+
+#task_list .btn {
+	background: none;
+    border: none;
+    box-shadow: none;
+    border-radius: 0px;
+}
+
+#task_list .btn:hover {
+    border: none;
+    background: #E0E0E0;
 }
 
 .min_height {
@@ -58,7 +89,7 @@ body {
 }
 
 .linear_layout div {
-	display: inline-block;
+	display: table-cell;
 }
 
 .linear_layout .task_text {
@@ -68,7 +99,6 @@ body {
 
 .linear_layout .btns {
     float: right;
-	margin-right: 5px;
 	cursor: pointer;
 }
 
