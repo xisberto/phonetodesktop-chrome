@@ -1,15 +1,54 @@
-var oauth = chrome.extension.getBackgroundPage().oauth;
+function authenticatedXhr(method, url, interactive, callback) {
+    var access_token;
 
-function saveListId() {
+    var retry = true;
+
+    getToken();
+
+    function getToken() {
+        chrome.identity.getAuthToken({ interactive: interactive }, function(token) {
+            if (chrome.runtime.lastError) {
+                callback(chrome.runtime.lastError);
+                return;
+            }
+            
+            console.log("token: " + token);
+
+            access_token = token;
+            requestStart();
+        });
+    }
+
+    function requestStart() {
+        var xhr = new XMLHttpRequest();
+        xhr.open(method, url);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
+        xhr.onload = requestComplete;
+        xhr.send();
+    }
+
+    function requestComplete() {
+        if (this.status == 401 && retry) {
+            retry = false;
+            chrome.identity.removeCachedAuthToken({ token: access_token }, 
+                                                  getToken);
+        } else {
+            callback(null, this.status, this.response);
+        }
+    }
+}
+
+function saveListId(interactive) {
     var url = "https://www.googleapis.com/tasks/v1/users/@me/lists";
-    var request = {
-        'method': 'GET'
-    };
-    var oauth_callback = function(resp, xhr) {
-        resp = JSON.parse(resp);
+    authenticatedXhr('GET', url, interactive, function(error, status, response){
+        if (error != undefined) {
+            console.log("No list returned");
+            return;
+        }
+        resp = JSON.parse(response);
         var lists = resp.items;
         for (i in lists) {
-            console.log("Lista: "+lists[i].title);
+            console.log("Lista: " + lists[i].title);
             if (lists[i].title == "PhoneToDesktop") {
                 localStorage.setItem('list_id', lists[i].id);
             }
@@ -18,15 +57,11 @@ function saveListId() {
         if (localStorage.getItem('list_id') == null) {
             alertNoList();
         }
-    };
-    oauth.sendSignedRequest(url, oauth_callback, request);
+    });
 }
 
 function reset_configuration() {
     localStorage.removeItem('list_id');
-    oauth.clearTokens();
-    var background_page = chrome.extension.getBackgroundPage();
-    chrome.runtime.reload();
     console.log("reset_configuration");
     console.log("list_id: "+localStorage.getItem("list_id"));
     loadTasks();
@@ -43,23 +78,20 @@ function loadTasks() {
     var list_id = localStorage.getItem('list_id');
     if (list_id == null){
         chrome.extension.getBackgroundPage().addEventListener("storage", handle_list_id_updated, false);
-        saveListId();
+        saveListId(true);
         return;
     } else {
         chrome.extension.getBackgroundPage().removeEventListener("storage", handle_list_id_updated, false);
         var url = "https://www.googleapis.com/tasks/v1/lists/"+list_id+"/tasks";
-        var request = {
-            'method': 'GET'
-        };
-        var callback = function(resp, xhr) {
-            if (xhr.status == 200) {
+        var callback = function(error, status, resp) {
+            if (status == 200) {
                 resp = JSON.parse(resp);
                 listTasks(resp.items);
             } else {
                 alertNoList();
             }
         }
-        oauth.sendSignedRequest(url, callback, request);
+        authenticatedXhr('GET', url, false, callback);
     }
 }
 
@@ -68,11 +100,8 @@ function delete_item(event){
     var list_id = localStorage.getItem('list_id');
     var task_id = parent.attr("id");
     var url = "https://www.googleapis.com/tasks/v1/lists/"+list_id+"/tasks/"+task_id;
-    var request = {
-        'method': 'DELETE'
-    };
-    var callback = function(resp, xhr){
-        if (resp) {
+    var callback = function(error, status, resp){
+        if (status != 204) {
             parent.slideDown(300, function(){
                 parent.addClass('min_height');
             });
@@ -82,7 +111,7 @@ function delete_item(event){
     };
     parent.removeClass('min_height');
     parent.slideUp(300, function(){
-        oauth.sendSignedRequest(url, callback, request);
+        authenticatedXhr('DELETE', url, false, callback);
     });
 }
 
@@ -97,7 +126,7 @@ function alertNoList() {
     
     message_reset = $("<p>");
     message_reset.text(chrome.i18n.getMessage("needResetConf"));
-    button_reset = $("<a class='btn'>");
+    button_reset = $("<a class='btn btn-default'>");
     button_reset.text(chrome.i18n.getMessage("reset_configuration"));
     button_reset.click(reset_configuration);
     message_reset.append(button_reset);
@@ -125,8 +154,8 @@ function listTasks(tasks) {
 		var task_title = autolinker.link(tasks[j].title);
         div_text.html(task_title).appendTo(item);
         
-        var btn_del = $("<a class='btn'>");
-        btn_del.append("<i class='icon-trash'></i>");
+        var btn_del = $("<a class='btn btn-default'>");
+        btn_del.append("<img src='images/delete.png' />");
         btn_del.click(delete_item);
         btn_del.appendTo(div_btns);
         
@@ -136,8 +165,8 @@ function listTasks(tasks) {
 }
 
 function prepareHTMLTexts(){
-    $("a[href='#tab_list'] span").text(chrome.i18n.getMessage("tab_list"));
-    $("a[href='#tab_about'] span").text(chrome.i18n.getMessage("tab_about"));
+    $("a[href='#tab_list']").text(chrome.i18n.getMessage("tab_list"));
+    $("a[href='#tab_about']").text(chrome.i18n.getMessage("tab_about"));
     $("#btn_reset").text(chrome.i18n.getMessage("reset_configuration"));
 	var autolinker = new Autolinker();
 	var message1_text = autolinker.link(chrome.i18n.getMessage("about_message1"));
