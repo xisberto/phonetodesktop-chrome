@@ -5,6 +5,7 @@
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="bootstrap/css/bootstrap-theme.css" rel="stylesheet">
     <link href="popup.css" rel="stylesheet">
+    <link href="loading.css" rel="stylesheet">
 </head>
 <body>
     <section class="navbar navbar-default navbar-fixed-top">
@@ -43,7 +44,11 @@
     <section id="main_screen" class="container-fluid">
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="tab_wait">
-                <img src="images/spinner.gif" />
+                <div class="loader">
+                    <svg class="circular">
+                        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+                    </svg>
+                </div>
             </div>
             <div role="tabpanel" class="tab-pane" id="tab_list">
                 <div class="container-fluid" id="task_list">
