@@ -139,6 +139,7 @@ function alertNoList() {
 
 function listTasks(tasks) {
     $("#task_list").empty();
+	var autolinker = new Autolinker();
     for (j in tasks) {
         if (tasks[j].title=="") {
             continue;
@@ -150,10 +151,8 @@ function listTasks(tasks) {
         div_btns.appendTo(item);
         
         var div_text = $("<div class='task_text'>");
-        div_text.text(tasks[j].title).appendTo(item);
-        div_text.linkify({
-            target: "_blank"
-        });
+		var task_title = autolinker.link(tasks[j].title);
+        div_text.html(task_title).appendTo(item);
         
         var btn_del = $("<a class='btn btn-default'>");
         btn_del.append("<img src='images/delete.png' />");
@@ -169,17 +168,14 @@ function prepareHTMLTexts(){
     $("a[href='#tab_list']").text(chrome.i18n.getMessage("tab_list"));
     $("a[href='#tab_about']").text(chrome.i18n.getMessage("tab_about"));
     $("#btn_reset").text(chrome.i18n.getMessage("reset_configuration"));
+	var autolinker = new Autolinker();
+	var message1_text = autolinker.link(chrome.i18n.getMessage("about_message1"));
+	var message2_text = autolinker.link(chrome.i18n.getMessage("about_message2"));
     $("<p>")
-        .text(chrome.i18n.getMessage("about_message1"))
-        .linkify({
-            target: "_blank"
-        })
+        .html(message1_text)
         .appendTo($("#about_message"));
     $("<p>")
-        .text(chrome.i18n.getMessage("about_message2"))
-        .linkify({
-            target: "_blank"
-        })
+        .html(message2_text)
         .appendTo($("#about_message"));
 }
 
