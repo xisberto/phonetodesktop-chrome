@@ -1,3 +1,48 @@
+function authenticatedXhr(method, url, params, interactive, callback) {
+    var access_token;
+
+    var retry = true;
+
+    getToken();
+
+    function getToken() {
+        chrome.identity.getAuthToken({ interactive: interactive }, function(token) {
+            if (chrome.runtime.lastError) {
+                callback(chrome.runtime.lastError);
+                return;
+            }
+            
+            console.log("token obtained");
+
+            access_token = token;
+            requestStart();
+        });
+    }
+
+    function requestStart() {
+        var xhr = new XMLHttpRequest();
+        xhr.open(method, url);
+        xhr.setRequestHeader("Authorization", "Bearer " + access_token);
+        xhr.onload = requestComplete;
+        if (params != null) {
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(params);
+        } else {
+            xhr.send();
+        }
+    }
+
+    function requestComplete() {
+        if (this.status == 401 && retry) {
+            retry = false;
+            chrome.identity.removeCachedAuthToken({ token: access_token }, 
+                                                  getToken);
+        } else {
+            callback(null, this.status, this.response);
+        }
+    }
+}
+
 function contextMenuClick(onClickData, tab) {
     console.log(onClickData);
     console.log(tab.url);
@@ -20,16 +65,13 @@ function contextMenuClick(onClickData, tab) {
 
         var list_id = localStorage.getItem("list_id");
         var url = "https://www.googleapis.com/tasks/v1/lists/"+list_id+"/tasks";
-        var request = {
-            'method': 'POST',
-            'headers': {
-                'content-type': 'application/json'
-            },
-            'body': '{"title": "'+task_title+'"}'
-        };
-        var callback = function(resp, xhr) {
+        var params = '{'+
+            '   "title": "'+task_title+'"'+
+            '}';
+        console.log(params);
+        var callback = function(error, status, resp) {
             chrome.browserAction.setBadgeText({"text": ""});
-            if (xhr.status == 200) {
+            if (status == 200) {
                 console.log("OK");
                 console.log(resp);
             } else {
@@ -38,18 +80,14 @@ function contextMenuClick(onClickData, tab) {
             }
         }
         chrome.browserAction.setBadgeText({"text": "…"});
-        oauth.sendSignedRequest(url, callback, request);
+        authenticatedXhr('POST', url, params, false, callback)
     }
     
 }
 
 chrome.contextMenus.onClicked.addListener(contextMenuClick);
 
-chrome.runtime.onInstalled.addListener(function() {
-    console.log("Running on installation");
-    
-    chrome.browserAction.setBadgeBackgroundColor({"color": "#669900"});
-    
+function configureContextMenus() {
     chrome.contextMenus.create({
         title: chrome.i18n.getMessage("send_to_mobile"),
         contexts: ["link", "selection"],
@@ -60,4 +98,20 @@ chrome.runtime.onInstalled.addListener(function() {
         contexts: ["page"],
         id: "page"
     });
+}
+
+chrome.runtime.onInstalled.addListener(function() {
+    console.log("Running on install");
+    chrome.identity.getAuthToken({ interactive: true }, function(token) {
+        console.log("token obtained");
+    });
+    configureContextMenus();
+});
+
+chrome.runtime.onStartup.addListener(function() {
+    console.log("Running on startup");
+    
+    chrome.browserAction.setBadgeBackgroundColor({"color": "#669900"});
+    
+    configureContextMenus();
 });
