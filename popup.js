@@ -1,63 +1,26 @@
-function authenticatedXhr(method, url, interactive, callback) {
-    var access_token;
-
-    var retry = true;
-
-    getToken();
-
-    function getToken() {
-        chrome.identity.getAuthToken({ interactive: interactive }, function(token) {
-            if (chrome.runtime.lastError) {
-                callback(chrome.runtime.lastError);
-                return;
-            }
-            
-            console.log("token: " + token);
-
-            access_token = token;
-            requestStart();
-        });
-    }
-
-    function requestStart() {
-        var xhr = new XMLHttpRequest();
-        xhr.open(method, url);
-        xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
-        xhr.onload = requestComplete;
-        xhr.send();
-    }
-
-    function requestComplete() {
-        if (this.status == 401 && retry) {
-            retry = false;
-            chrome.identity.removeCachedAuthToken({ token: access_token }, 
-                                                  getToken);
-        } else {
-            callback(null, this.status, this.response);
-        }
-    }
-}
-
 function saveListId(interactive) {
     var url = "https://www.googleapis.com/tasks/v1/users/@me/lists";
-    authenticatedXhr('GET', url, interactive, function(error, status, response){
-        if (error != undefined) {
-            console.log("No list returned");
-            return;
-        }
-        resp = JSON.parse(response);
-        var lists = resp.items;
-        for (i in lists) {
-            console.log("Lista: " + lists[i].title);
-            if (lists[i].title == "PhoneToDesktop") {
-                localStorage.setItem('list_id', lists[i].id);
+    chrome.runtime.getBackgroundPage(function(backgroundPage){
+        backgroundPage.authenticatedXhr('GET', url, null, interactive, function(error, status, response){
+            if (error != undefined) {
+                console.log("No list returned");
+                return;
             }
-        }
-        console.log('lista salva no localStorage: '+localStorage.getItem('list_id'));
-        if (localStorage.getItem('list_id') == null) {
-            alertNoList();
-        }
+            resp = JSON.parse(response);
+            var lists = resp.items;
+            for (i in lists) {
+                console.log("Lista: " + lists[i].title);
+                if (lists[i].title == "PhoneToDesktop") {
+                    localStorage.setItem('list_id', lists[i].id);
+                }
+            }
+            console.log('lista salva no localStorage: '+localStorage.getItem('list_id'));
+            if (localStorage.getItem('list_id') == null) {
+                alertNoList();
+            }
+        });
     });
+    
 }
 
 function reset_configuration() {
@@ -77,11 +40,15 @@ function loadTasks() {
     $("#actionbar_tab a[href='#tab_wait']").tab('show');
     var list_id = localStorage.getItem('list_id');
     if (list_id == null){
-        chrome.extension.getBackgroundPage().addEventListener("storage", handle_list_id_updated, false);
+        chrome.runtime.getBackgroundPage(function(backgroundPage) {
+            backgroundPage.addEventListener("storage", handle_list_id_updated, false);
+        });
         saveListId(true);
         return;
     } else {
-        chrome.extension.getBackgroundPage().removeEventListener("storage", handle_list_id_updated, false);
+        chrome.runtime.getBackgroundPage(function(backgroundPage) {
+            backgroundPage.removeEventListener("storage", handle_list_id_updated, false);
+        });
         var url = "https://www.googleapis.com/tasks/v1/lists/"+list_id+"/tasks";
         var callback = function(error, status, resp) {
             if (status == 200) {
@@ -91,7 +58,9 @@ function loadTasks() {
                 alertNoList();
             }
         }
-        authenticatedXhr('GET', url, false, callback);
+        chrome.runtime.getBackgroundPage(function(backgroundPage){
+            backgroundPage.authenticatedXhr('GET', url, null, false, callback);
+        });
     }
 }
 
@@ -111,7 +80,9 @@ function delete_item(event){
     };
     parent.removeClass('min_height');
     parent.slideUp(300, function(){
-        authenticatedXhr('DELETE', url, false, callback);
+        chrome.runtime.getBackgroundPage(function(backgroundPage){
+            backgroundPage.authenticatedXhr('DELETE', url, null, false, callback);
+        });
     });
 }
 
